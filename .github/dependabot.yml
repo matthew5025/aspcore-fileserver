@@ -11,7 +11,7 @@ updates:
     schedule:
       interval: "daily"
   # Maintain dependencies for npm
-  - package-ecosystem: "npm"
+  - package-ecosystem: "nuget"
     directory: "FileServer"
     schedule:
       interval: "daily"
