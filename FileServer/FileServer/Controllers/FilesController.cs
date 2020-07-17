@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FileServer.Crypto;
 using FileServer.Database;
 using FileServer.StorageProvider;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
@@ -70,6 +71,15 @@ namespace FileServer.Controllers
 
         }
 
+        [HttpOptions]
+        public IActionResult PreflightRoute()
+        {
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            Response.Headers.Add("Access-Control-Allow-Headers", "FileName");
+            Response.Headers.Add("Access-Control-Allow-Method", "POST");
+            return NoContent();
+        }
+
         // POST api/<FilesController>
         [HttpPost]
         public IActionResult Post()
@@ -94,6 +104,8 @@ namespace FileServer.Controllers
             {
                 ["fileId"] = g.ToString()
             };
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+
             return Ok(responseDict);
 
         }
