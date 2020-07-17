@@ -34,6 +34,7 @@ function uploadFile(){
             let fileId = response["fileId"];
             let fileUrl = api_url + "/" + fileId;
             let qrCodeDiv = document.getElementById("qrcode")
+            qrCodeDiv.innerHTML = "";
             new QRCode(qrCodeDiv, {
                text:  fileUrl
             });
