@@ -33,7 +33,7 @@ function uploadFile(){
             console.log(response);
             let fileId = response["fileId"];
             let fileUrl = api_url + "/" + fileId;
-            let qrCodeDiv = document.getElementById("qrcode")
+            let qrCodeDiv = document.getElementById("qrcode");
             qrCodeDiv.innerHTML = "";
             new QRCode(qrCodeDiv, {
                text:  fileUrl
@@ -42,7 +42,7 @@ function uploadFile(){
             let qrImage = qrCodeDiv.getElementsByTagName("img")[0];
             qrImage.style.marginLeft = "auto";
             qrImage.style.marginRight = "auto";
-            let modalBtn = document.getElementById('mBtn')
+            let modalBtn = document.getElementById('mBtn');
             modalBtn.click();
             fileInput.value = null;
             fileInput.disabled = false;
