@@ -7,6 +7,6 @@ namespace FileServer.Database
 
         public void StoreFileDetails(DbFileInfo fileInfo);
 
-        public DbFileInfo GetFileInfo(Guid fileId);
+        public DbFileInfo GetFileInfo(string fileId);
     }
 }

@@ -45,7 +45,7 @@ namespace FileServer.Controllers
                 return NotFound();
             }
 
-            DbFileInfo fileInfo = _databaseInterface.GetFileInfo(fileGuid);
+            DbFileInfo fileInfo = _databaseInterface.GetFileInfo(fileGuid.ToString());
             if (fileInfo == null)
             {
                 return NotFound();
@@ -57,7 +57,7 @@ namespace FileServer.Controllers
             };
 
             var dloadStream = new ProducerConsumerStream(1048576);
-            _googleDriveInterface.DownloadFileAsync(fileId, dloadStream);
+            _googleDriveInterface.DownloadFileAsync(fileInfo.ServerFileName, dloadStream);
             var outStream = fileCrypto.BcDecryptStream(dloadStream);
 
             return new FileCallbackResult(new MediaTypeHeaderValue("application/octet-stream"), async (outputStream, _) =>
@@ -93,7 +93,7 @@ namespace FileServer.Controllers
             _googleDriveInterface.UploadFile(g.ToString(), cs);
             var fileInfo = new DbFileInfo
             {
-                FileId = g,
+                FileId = g.ToString(),
                 FileName = fileName,
                 Key = fileCrypto.Key,
                 Iv = fileCrypto.Iv

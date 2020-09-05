@@ -20,7 +20,11 @@ namespace FileServer.Database
                 if (!reader.HasRows)
                 {
                     var createTableCommand = _connection.CreateCommand();
-                    createTableCommand.CommandText = "create table fileInfo(fileId GUID PRIMARY KEY, fileName TEXT NOT NULL, key BLOB NOT NULL, iv BLOB NOT NULL)";
+                    createTableCommand.CommandText = "create table fileInfo(fileId TEXT PRIMARY KEY, " +
+                                                     "serverFileName TEXT NOT NULL, " +
+                                                     "fileName TEXT NOT NULL, " +
+                                                     "key BLOB NOT NULL, " +
+                                                     "iv BLOB NOT NULL)";
                     createTableCommand.ExecuteNonQuery();
                 }
             }
@@ -29,7 +33,7 @@ namespace FileServer.Database
 
         }
 
-    public DbFileInfo GetFileInfo(Guid fileId)
+    public DbFileInfo GetFileInfo(string fileId)
         {
             DbFileInfo fileInfo = null;
             using (var connection = _connection)
@@ -37,7 +41,7 @@ namespace FileServer.Database
                 connection.Open();
 
                 var command = connection.CreateCommand();
-                command.CommandText = "select fileName, key, iv from fileInfo where fileID = @guid";
+                command.CommandText = "select serverFileName, fileName, key, iv from fileInfo where fileID = @guid";
                 command.Parameters.AddWithValue("@guid", fileId);
                 using (var reader = command.ExecuteReader())
                 {
@@ -46,6 +50,7 @@ namespace FileServer.Database
                         reader.Read();
                         fileInfo = new DbFileInfo
                         {
+                            ServerFileName = (string)reader["serverFileName"],
                             FileName = (string)reader["fileName"],
                             Key = (byte[])reader["key"],
                             Iv = (byte[])reader["iv"],
@@ -67,8 +72,9 @@ namespace FileServer.Database
                 connection.Open();
 
                 var command = connection.CreateCommand();
-                command.CommandText = "insert into fileInfo values(@guid, @filename, @key, @iv)";
+                command.CommandText = "insert into fileInfo values(@guid, @serverFileName, @filename, @key, @iv)";
                 command.Parameters.AddWithValue("@guid", fileInfo.FileId);
+                command.Parameters.AddWithValue("@serverFileName", fileInfo.ServerFileName);
                 command.Parameters.AddWithValue("@filename", fileInfo.FileName);
                 command.Parameters.AddWithValue("@key", fileInfo.Key);
                 command.Parameters.AddWithValue("@iv", fileInfo.Iv);
