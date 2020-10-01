@@ -1,4 +1,4 @@
-api_url = "https://localhost:5001/api/Files"
+api_url = window.location.origin + "/api/Files"
 
 function onSubmitClick() {
     uploadFile();
