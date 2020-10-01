@@ -71,14 +71,6 @@ namespace FileServer.Controllers
 
         }
 
-        [HttpOptions]
-        public IActionResult PreflightRoute()
-        {
-            Response.Headers.Add("Access-Control-Allow-Origin", "*");
-            Response.Headers.Add("Access-Control-Allow-Headers", "FileName, Content-Type");
-            Response.Headers.Add("Access-Control-Allow-Method", "POST");
-            return NoContent();
-        }
 
         // POST api/<FilesController>
         [HttpPost]

@@ -30,28 +30,28 @@ function uploadFile() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             console.log(xhr.responseText);
-            let response = JSON.parse(xhr.responseText);
-            console.log(response);
-            let fileId = response["fileId"];
-            let fileUrl = api_url + "/" + fileId;
-            let qrCodeDiv = document.getElementById("qrcode");
-            qrCodeDiv.innerHTML = "";
-            new QRCode(qrCodeDiv, {
-                text: fileUrl
-            });
-            document.getElementById("fileUrl").value = fileUrl;
-            let qrImage = qrCodeDiv.getElementsByTagName("img")[0];
-            qrImage.style.marginLeft = "auto";
-            qrImage.style.marginRight = "auto";
-            let modalBtn = document.getElementById('mBtn');
-            modalBtn.click();
-            fileInput.value = null;
-            fileInput.disabled = false;
-            submitBtn.disabled = false;
-            singleDownloadCheckBox.disabled = false;
-            let progressBar = document.getElementById("progressBar");
-            progressBar.style.width = 0 + "%";
-            progressBar.innerText = "";
+            if (xhr.response === 200){
+                let response = JSON.parse(xhr.responseText);
+                console.log(response);
+                let fileId = response["fileId"];
+                let fileUrl = api_url + "/" + fileId;
+                let qrCodeDiv = document.getElementById("qrcode");
+                qrCodeDiv.innerHTML = "";
+                new QRCode(qrCodeDiv, {
+                    text: fileUrl
+                });
+                document.getElementById("fileUrl").value = fileUrl;
+                let qrImage = qrCodeDiv.getElementsByTagName("img")[0];
+                qrImage.style.marginLeft = "auto";
+                qrImage.style.marginRight = "auto";
+                let modalBtn = document.getElementById('mBtn');
+                modalBtn.click();
+                resetDisabledControls();            }
+            else {
+                alert("File upload failed!");
+                resetDisabledControls();
+            }
+
 
 
         }
@@ -76,5 +76,20 @@ function copyText() {
 function resetButtonText() {
     let button = document.getElementById("button-addon2");
     button.innerText = 'Copy URL';
+
+}
+
+function resetDisabledControls(){
+    let fileInput = document.getElementById('customFile');
+    let submitBtn = document.getElementById("submitBtn");
+    let singleDownloadCheckBox = document.getElementById("singleDownloadCheck");
+
+    fileInput.value = null;
+    fileInput.disabled = false;
+    submitBtn.disabled = false;
+    singleDownloadCheckBox.disabled = false;
+    let progressBar = document.getElementById("progressBar");
+    progressBar.style.width = 0 + "%";
+    progressBar.innerText = "";
 
 }
