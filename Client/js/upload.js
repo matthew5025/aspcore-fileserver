@@ -5,28 +5,29 @@ function onSubmitClick() {
     return false;
 }
 
-function updateProgress(evt)
-{
+function updateProgress(evt) {
     if (evt.lengthComputable) {
         let progress = Math.ceil(((evt.loaded + evt.loaded) / evt.total) * 50);
         console.log(progress);
         let progressBar = document.getElementById("progressBar");
         progressBar.style.width = progress.toString(10) + "%";
         progressBar.innerText = progress.toString(10) + "%";
-        if(progress === 100){
+        if (progress === 100) {
             progressBar.innerText = "Processing file...";
         }
     }
 }
 
-function uploadFile(){
+function uploadFile() {
     let fileInput = document.getElementById('customFile');
     fileInput.disabled = true;
     let submitBtn = document.getElementById("submitBtn");
     submitBtn.disabled = true;
+    let singleDownloadCheckBox = document.getElementById("singleDownloadCheck");
+    singleDownloadCheckBox.disabled = true;
     let file = fileInput.files[0];
     let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             console.log(xhr.responseText);
             let response = JSON.parse(xhr.responseText);
@@ -36,7 +37,7 @@ function uploadFile(){
             let qrCodeDiv = document.getElementById("qrcode");
             qrCodeDiv.innerHTML = "";
             new QRCode(qrCodeDiv, {
-               text:  fileUrl
+                text: fileUrl
             });
             document.getElementById("fileUrl").value = fileUrl;
             let qrImage = qrCodeDiv.getElementsByTagName("img")[0];
@@ -47,6 +48,7 @@ function uploadFile(){
             fileInput.value = null;
             fileInput.disabled = false;
             submitBtn.disabled = false;
+            singleDownloadCheckBox.disabled = false;
             let progressBar = document.getElementById("progressBar");
             progressBar.style.width = 0 + "%";
             progressBar.innerText = "";
@@ -56,6 +58,7 @@ function uploadFile(){
     }
     xhr.open('POST', api_url);
     xhr.setRequestHeader("FileName", file.name);
+    xhr.setRequestHeader("SingleDownload", singleDownloadCheckBox.checked);
     xhr.setRequestHeader("Content-Type", " application/octet-stream")
     xhr.upload.onprogress = updateProgress;
     xhr.send(file);
